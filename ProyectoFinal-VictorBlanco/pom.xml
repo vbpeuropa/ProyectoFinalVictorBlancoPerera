@@ -76,7 +76,7 @@
           <artifactId>heroku-maven-plugin</artifactId>
           <version>0.5.1</version>
           <configuration>
-            <appName>ProyectoFinal-VictorBlanco</appName>
+            <appName>proyectofinalvbp</appName>
           </configuration>
         </plugin>
 		</plugins>
