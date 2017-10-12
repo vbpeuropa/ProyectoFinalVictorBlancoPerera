@@ -15,9 +15,9 @@
 		action="getCity">
 	
 		<h1>Introduce la ciudad que quieras consultar</h1>
-		<form:input path="cityName" size="50" maxlength="50" />
+		<form:input path="cityName" size="50" maxlength="50" required="true" />
 		
-		<br/><br/>
+		<br/>	<span style="color: red;">${error}</span><br/>
 		
 		<input type="submit" value="   Crear Publicación  ">
 	

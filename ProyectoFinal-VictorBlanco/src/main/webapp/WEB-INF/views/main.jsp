@@ -2,18 +2,15 @@
 <html>
 <head>
 <title>ClimateApp</title>
-<link rel="stylesheet" href="resources/styles/bootstrap.min.css" />
-<link rel="stylesheet" href="resources/styles/bootstrap-theme.min.css" />
 <link rel="shortcut icon" type="image/png" href="${img}" />
 </head>
 <body>
-	<h3>Tu Tiempo actual en ${city}</h3>
-	<h4>País: ${country}</h4>
-	<h4>Temperatura: ${temp}</h4>
+
+	<h2>Tu Tiempo actual en ${city}</h2>
+	
+	<p>País: ${country}<br>
+	Temperatura: ${temp} ºC</p>
 	<img src="${img}">
-
-
-	<%-- Importamos la librería core de JSTL --%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 	<%-- Iterar sobre la lista de publicaciones que viene en el
@@ -22,26 +19,30 @@
 	controlador --%>
 	<br>
 	<form:form method="post" modelAttribute="city" action="newcity">
-		<input type="submit" value="   Buscar otra Ciudad  " />
+		<input type="submit" value="   Buscar otra Ciudad   " />
 	</form:form>
 
-
 	<h2>Lista de registros anteriores</h2>
-	<ul>
+	
+	<table>
 		<c:forEach items="${ListadoReg}" var="Register">
-			<li>
-				<div>
-					<c:out value="${Register.country}" />
-				</div> 
-				<span> <c:out value="${Register.city}" />
-			</span>
-			<div>
-				<c:out value="${Register.temp}" />
-				</div> 
-				<span><img src="${Register.img}">
-			</span>
-			</li>
+			<tr>
+				<td>
+					<div>
+						<c:out value="${Register.country}" />
+					</div> <span> <c:out value="${Register.city}" />
+
+				</span>
+
+					<div>
+						<c:out value="${Register.temp}" />
+						<span>ºC</span>
+					</div>
+				</td>
+				<td><span><img src="${Register.img}"> </span></td>
+			</tr>
 		</c:forEach>
-	</ul>
+
+	</table>
 </body>
 </html>

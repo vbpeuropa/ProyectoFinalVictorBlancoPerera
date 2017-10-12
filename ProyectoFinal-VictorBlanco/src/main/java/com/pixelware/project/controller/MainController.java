@@ -141,23 +141,29 @@ public class MainController {
 	@PostMapping("/getCity")
 	public String Cities(@ModelAttribute("city") City city, Model model) {
 
-	      if (!Pattern.matches("[0-9]*", city.getCityName())) {
-			RestTemplate restTemplate = new RestTemplate();
-			GlobalClimate climate = restTemplate.getForObject(
-					"http://api.apixu.com/v1/current.json?key=656fb7b9319c48c7a31125431171010&q=" + city.getCityName(),
-					GlobalClimate.class);
-			servicehistories
-					.addRegister(new Register(climate.getLocation().getCountry(), climate.getLocation().getName(),
-							climate.getCurrent().getTemp_c(), climate.getCurrent().getCondition().getIcon()));
-			model.addAttribute("ListadoReg", servicehistories.obtenerRegistros());
-			// Crear atributo en el modelo especificando clave y valor
-			model.addAttribute("country", climate.getLocation().getCountry());
-			model.addAttribute("city", climate.getLocation().getName());
-			model.addAttribute("temp", climate.getCurrent().getTemp_c());
-			model.addAttribute("img", climate.getCurrent().getCondition().getIcon());
-			return "main";
+	      try {
+			if (!Pattern.matches("[0-9]*", city.getCityName())) {
+				RestTemplate restTemplate = new RestTemplate();
+				GlobalClimate climate = restTemplate
+						.getForObject("http://api.apixu.com/v1/current.json?key=656fb7b9319c48c7a31125431171010&q="
+								+ city.getCityName(), GlobalClimate.class);
+				servicehistories
+						.addRegister(new Register(climate.getLocation().getCountry(), climate.getLocation().getName(),
+								climate.getCurrent().getTemp_c(), climate.getCurrent().getCondition().getIcon()));
+				model.addAttribute("ListadoReg", servicehistories.obtenerRegistros());
+				// Crear atributo en el modelo especificando clave y valor
+				model.addAttribute("country", climate.getLocation().getCountry());
+				model.addAttribute("city", climate.getLocation().getName());
+				model.addAttribute("temp", climate.getCurrent().getTemp_c());
+				model.addAttribute("img", climate.getCurrent().getCondition().getIcon());
+				return "main";
+			}
+			model.addAttribute("error", "Campo no válido");
+			return "newcity";
+		} catch (Exception HttpClientErrorException) {
+			model.addAttribute("error", "Ciudad No Encontrada");
+			return "newcity";
+			
 		}
-	     model.addAttribute("error", "Campo no válido");
-		return "newCity";
 	}
 }
