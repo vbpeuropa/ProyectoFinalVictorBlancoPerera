@@ -1,5 +1,7 @@
 package com.pixelware.project.controller;
 
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import com.pixelware.project.dao.ServiceUser;
 import com.pixelware.project.model.City;
 import com.pixelware.project.model.GlobalClimate;
+import com.pixelware.project.model.Register;
 import com.pixelware.project.model.User;
+import com.pixelware.project.dao.ServiceHistory;
 
 
 @Controller
@@ -25,15 +29,22 @@ import com.pixelware.project.model.User;
 @SessionAttributes("user")
 
 
-public class LoginController {
+public class MainController {
+	
 	private ServiceUser serviceusers;
-
-
+	
+	@Autowired
+	private ServiceHistory servicehistories;
+	
 	@Autowired
 	public void setServiceUser(ServiceUser serviceUser) {
 		this.serviceusers = serviceUser;
 	}
+	
 
+	public void setServiceHistory(ServiceHistory servicehistory) {
+		this.servicehistories = servicehistory;
+	}
 	
 	/*
 	 * Añadir atributo user al modelo
@@ -88,13 +99,18 @@ public class LoginController {
 		}
 
 
-		return "city";
+		return "newcity";
 	}
 	
 	
 	@PostMapping("/newUser")
 	public String newUser() {
 		return "newUser";
+	}
+	
+	@PostMapping("/newcity")
+	public String newcity() {
+		return "newcity";
 	}
 	
 	@PostMapping("/createUser")
@@ -125,20 +141,23 @@ public class LoginController {
 	@PostMapping("/getCity")
 	public String Cities(@ModelAttribute("city") City city, Model model) {
 
-	      RestTemplate restTemplate = new RestTemplate();
-	      GlobalClimate climate = restTemplate.getForObject("http://api.apixu.com/v1/current.json?key=656fb7b9319c48c7a31125431171010&q="+city.getCityName(), GlobalClimate.class);	
+	      if (!Pattern.matches("[0-9]*", city.getCityName())) {
+			RestTemplate restTemplate = new RestTemplate();
+			GlobalClimate climate = restTemplate.getForObject(
+					"http://api.apixu.com/v1/current.json?key=656fb7b9319c48c7a31125431171010&q=" + city.getCityName(),
+					GlobalClimate.class);
+			servicehistories
+					.addRegister(new Register(climate.getLocation().getCountry(), climate.getLocation().getName(),
+							climate.getCurrent().getTemp_c(), climate.getCurrent().getCondition().getIcon()));
+			model.addAttribute("ListadoReg", servicehistories.obtenerRegistros());
 			// Crear atributo en el modelo especificando clave y valor
-			model.addAttribute("index", climate.toString());
-		
-		return "main";
+			model.addAttribute("country", climate.getLocation().getCountry());
+			model.addAttribute("city", climate.getLocation().getName());
+			model.addAttribute("temp", climate.getCurrent().getTemp_c());
+			model.addAttribute("img", climate.getCurrent().getCondition().getIcon());
+			return "main";
+		}
+	     model.addAttribute("error", "Campo no válido");
+		return "newCity";
 	}
-//	 @RequestMapping(value = { "/", "/index" }, method = RequestMethod.GET)
-//		public String listado(Model model) {
-//
-//	      RestTemplate restTemplate = new RestTemplate();
-//	      GlobalClimate climate = restTemplate.getForObject("http://api.apixu.com/v1/current.json?key=656fb7b9319c48c7a31125431171010&q=", GlobalClimate.class);	
-//			// Crear atributo en el modelo especificando clave y valor
-//			model.addAttribute("index", climate.toString());
-//			return "index";
-//		}
 }

@@ -14,7 +14,7 @@
 	<form:form method="post" modelAttribute="city"
 		action="getCity">
 	
-		<h1>Introduce la ciudad a Consultar</h1>
+		<h1>Introduce la ciudad que quieras consultar</h1>
 		<form:input path="cityName" size="50" maxlength="50" />
 		
 		<br/><br/>
