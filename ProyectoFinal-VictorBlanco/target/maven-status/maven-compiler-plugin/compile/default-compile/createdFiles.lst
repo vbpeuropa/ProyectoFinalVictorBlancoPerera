@@ -1,0 +1,14 @@
+com\pixelware\project\model\City.class
+com\pixelware\project\model\Current.class
+com\pixelware\project\dao\ServiceUserImpl.class
+com\pixelware\project\model\GlobalClimate.class
+com\pixelware\project\dao\ServiceHistory.class
+com\pixelware\project\model\Register.class
+com\pixelware\project\model\User.class
+com\pixelware\project\dao\ServiceHistoryImpl.class
+com\pixelware\project\model\Location.class
+com\pixelware\project\dao\ServiceUser.class
+com\pixelware\project\config\WebAppInitializer.class
+com\pixelware\project\controller\MainController.class
+com\pixelware\project\model\Condition.class
+com\pixelware\project\config\WebConfig.class
